@@ -1,6 +1,16 @@
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
+import { provideRouter } from '@angular/router';
 import { AppComponent } from './app/app.component';
+import { routes } from './app/app.routes';
+import { LoadingInterceptor } from './app/features/interceptor/loading.inteceptor';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
-bootstrapApplication(AppComponent, appConfig)
-  .catch((err) => console.error(err));
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter(routes),
+    provideHttpClient(),
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
+    provideAnimations()
+  ],
+}).catch((err) => console.error(err));

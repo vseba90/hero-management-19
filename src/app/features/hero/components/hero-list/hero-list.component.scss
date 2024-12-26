@@ -1,0 +1,15 @@
+i {
+    font-size: 16px;
+    &.red {
+        color: red;
+    }
+
+    &.orange {
+        color: #ffbf00;
+    }
+}
+::ng-deep {
+    .mdc-text-field--outlined {
+        height: 47px !important;
+    }
+}
