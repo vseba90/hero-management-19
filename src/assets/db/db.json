@@ -41,14 +41,6 @@
       "enemy": "Venom"
     },
     {
-      "id": "233a",
-      "name": "Venom",
-      "power": "Mucosa Negra",
-      "height": 220,
-      "weight": 89,
-      "enemy": "Spiderman"
-    },
-    {
       "id": "deae",
       "name": "La Roca",
       "power": "Dureza",

@@ -93,18 +93,6 @@ describe('HeroService', () => {
     req.flush(updatedHero);
   });
 
-  it('should delete a hero', () => {
-    const heroId = '1';
-
-    service.deleteHeroe(heroId).subscribe((response) => {
-      expect(response).toBeTruthy();
-    });
-
-    const req = httpMock.expectOne(`${environment.serverUrl}/heroes/1`);
-    expect(req.request.method).toBe('DELETE');
-    req.flush({});
-  });
-
   it('should retrieve a hero by ID', () => {
     const mockHero: HeroModel = {
       id: '1',
@@ -120,5 +108,15 @@ describe('HeroService', () => {
     const req = httpMock.expectOne(`${environment.serverUrl}/heroes?id=1`);
     expect(req.request.method).toBe('GET');
     req.flush([mockHero]);
+  });
+
+  it('should delete a hero', () => {
+    const heroId = '1';
+    service.deleteHeroe(heroId).subscribe((response) => {
+      expect(response).toBeTruthy();
+    });
+    const req = httpMock.expectOne(`${environment.serverUrl}/heroes/1`);
+    expect(req.request.method).toBe('DELETE');
+    req.flush({});
   });
 });

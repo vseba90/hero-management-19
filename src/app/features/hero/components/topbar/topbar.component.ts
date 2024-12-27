@@ -9,5 +9,5 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   styleUrl: './topbar.component.scss'
 })
 export class TopbarComponent {
-
+  title = 'SuperHéroes';
 }

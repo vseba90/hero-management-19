@@ -1,12 +1,14 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { AppComponent } from './app.component';
 import { routes } from './app.routes';
+import { Location } from '@angular/common';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [AppComponent, NoopAnimationsModule],
       providers: [provideRouter(routes)],
     }).compileComponents();
   });
@@ -29,5 +31,28 @@ describe('AppComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const routerOutlet = compiled.querySelector('router-outlet');
     expect(routerOutlet).toBeTruthy();
+  });
+
+  it('should have a title initialized in the constructor', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app.title).toBe('hero-managment');
+  });
+
+  it('should have a router outlet', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const compiled = fixture.nativeElement as HTMLElement;
+    const routerOutlet = compiled.querySelector('router-outlet');
+    expect(routerOutlet).toBeTruthy();
+  });
+  
+  it('should navigate to the specified route', async () => {
+    const router = TestBed.inject(Router);
+    const location = TestBed.inject(Location);
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    await router.navigate(['/list']);
+    fixture.detectChanges();
+    expect(location.path()).toBe('/list');
   });
 });

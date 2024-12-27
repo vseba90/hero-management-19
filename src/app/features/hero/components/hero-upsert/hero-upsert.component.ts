@@ -58,18 +58,24 @@ export class UpsertHeroComponent implements OnInit, OnDestroy {
   id: string | undefined = '';
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => { 
-      this.id = params['id']
-    if (this.id) {
-      this.#heroesServices
-        .getHeroById(this.id)
-        .pipe(takeUntil(this.#unsubscribe))
-        .subscribe((hero: HeroModel[]) => {
-          if (hero) {
-            this.heroeForm.patchValue(hero[0]);
-          }
-        });
-    }})
+    this.activatedRoute.params.subscribe((params) => {
+      this.id = params['id'];
+      if (this.id) {
+        this.#heroesServices
+          .getHeroById(this.id)
+          .pipe(takeUntil(this.#unsubscribe))
+          .subscribe({
+            next: (hero: HeroModel[]) => {
+              if (hero) {
+                this.heroeForm.patchValue(hero[0]);
+              }
+            },
+            error: () => {
+              this.#sharedService.openSnackBar('Se ha producido un error');
+            },
+          });
+      }
+    });
   }
 
   get f() {
@@ -98,7 +104,9 @@ export class UpsertHeroComponent implements OnInit, OnDestroy {
           next: () => {
             this.redirectToList('Su heroe fue modificado');
           },
-          error: () => {},
+          error: () => {
+            this.#sharedService.openSnackBar('Se ha producido un error');
+          },
         });
     } else {
       delete data.id;
@@ -108,6 +116,9 @@ export class UpsertHeroComponent implements OnInit, OnDestroy {
         .subscribe({
           next: () => {
             this.redirectToList('Su heroe ha sido creado correctamente');
+          },
+          error: () => {
+            this.#sharedService.openSnackBar('Se ha producido un error');
           },
         });
     }
