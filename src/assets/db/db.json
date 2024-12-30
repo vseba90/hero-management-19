@@ -1,14 +1,6 @@
 {
   "heroes": [
     {
-      "id": "5c10",
-      "name": "Hulk",
-      "power": "Verde",
-      "height": 200,
-      "weight": 200,
-      "enemy": "Todo"
-    },
-    {
       "id": "6b60",
       "name": "Capitan America",
       "power": "Fuerza",
@@ -25,28 +17,36 @@
       "enemy": "Imanes"
     },
     {
-      "id": "18c4",
-      "name": "Batman",
-      "power": "Millonario",
-      "height": 300,
-      "weight": 150,
-      "enemy": "Marvel"
-    },
-    {
-      "id": "3596",
-      "name": "Spiderman",
-      "power": "Poder Aracnido",
-      "height": 200,
-      "weight": 313,
-      "enemy": "Venom"
-    },
-    {
       "id": "deae",
       "name": "La Roca",
       "power": "Dureza",
       "height": 200,
       "weight": 500,
       "enemy": "El agua"
+    },
+    {
+      "id": "7949",
+      "name": "Antman",
+      "power": "Achicarse",
+      "height": 195,
+      "weight": 70,
+      "enemy": "Hortal"
+    },
+    {
+      "id": "cf68",
+      "name": "Spiderman",
+      "power": "Sentido Aracnido",
+      "height": 175,
+      "weight": 60,
+      "enemy": "Venom"
+    },
+    {
+      "id": "d35a",
+      "name": "Venom",
+      "power": "Mucosidad Negra",
+      "height": 200,
+      "weight": 200,
+      "enemy": "Spiderman"
     }
   ]
 }

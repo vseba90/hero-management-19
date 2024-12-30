@@ -119,4 +119,35 @@ describe('HeroService', () => {
     expect(req.request.method).toBe('DELETE');
     req.flush({});
   });
+
+  it('should handle error when getPaginatedHeroes fails', () => {
+    spyOn(service.heroes, 'next');
+    spyOn(service.totalHeroes, 'next');
+  
+    service.getPaginatedHeroes(1, 10).subscribe(
+      () => fail('expected an error, not heroes'),
+      error => {
+        expect(service.heroes.next).not.toHaveBeenCalled();
+        expect(service.totalHeroes.next).not.toHaveBeenCalled();
+      }
+    );
+  
+    const req = httpMock.expectOne(
+      `${environment.serverUrl}/heroes?_page=1&_per_page=10&_sort=name`
+    );
+    req.flush('Error', { status: 500, statusText: 'Server Error' });
+  });
+  it('should handle error when getHeroes fails', () => {
+    spyOn(service.heroes, 'next');
+  
+    service.getHeroes('superman').subscribe(
+      () => fail('expected an error, not heroes'),
+      error => {
+        expect(service.heroes.next).not.toHaveBeenCalled();
+      }
+    );
+  
+    const req = httpMock.expectOne(`${environment.serverUrl}/heroes`);
+    req.flush('Error', { status: 500, statusText: 'Server Error' });
+  });  
 });

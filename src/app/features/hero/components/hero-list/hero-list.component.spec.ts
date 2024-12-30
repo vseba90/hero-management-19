@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HeroListComponent } from './hero-list.component'; 
+import { HeroListComponent } from './hero-list.component';
 import { SharedService } from '../../../services/shared.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -29,6 +29,7 @@ describe('HeroListComponent', () => {
   let mockHeroService: jasmine.SpyObj<HeroService>;
   let mockSharedService: jasmine.SpyObj<SharedService>;
   let mockDialog: jasmine.SpyObj<MatDialog>;
+  let dialog: MatDialog;
 
   beforeEach(async () => {
     mockHeroService = jasmine.createSpyObj('HeroService', [
@@ -83,7 +84,6 @@ describe('HeroListComponent', () => {
         NoopAnimationsModule,
         RouterModule,
         MatPaginatorModule,
-        BrowserAnimationsModule,
         HeroListComponent,
       ],
       providers: [
@@ -207,4 +207,134 @@ describe('HeroListComponent', () => {
     );
   });
 
+  it('should not display the paginator if isPaginatorAvailable is false', () => {
+    const heroes = [
+      {
+        id: '1',
+        name: 'Superman',
+        power: 'Strength',
+        height: 180,
+        weight: 75,
+        enemy: 'Lex Luthor',
+      },
+    ];
+    component.vm$ = of({
+      heroes: heroes,
+      isPaginatorAvailable: false,
+      totalHeroes: 6,
+    });
+    fixture.detectChanges();
+    const paginator = fixture.debugElement.query(By.css('mat-paginator'));
+    expect(paginator).toBeNull();
+  });
+  it('should not display the paginator if totalHeroes <= 5', () => {
+    const heroes = [
+      {
+        id: '1',
+        name: 'Superman',
+        power: 'Strength',
+        height: 180,
+        weight: 75,
+        enemy: 'Lex Luthor',
+      },
+    ];
+    component.vm$ = of({
+      heroes: heroes,
+      isPaginatorAvailable: true,
+      totalHeroes: 3,
+    });
+    fixture.detectChanges();
+    const paginator = fixture.debugElement.query(By.css('mat-paginator'));
+    expect(paginator).toBeNull();
+  });
+
+  it('should display empty message when vm.data.heroes has no data', () => {
+    const heroes: never[] = [];
+    component.vm$ = of({
+      heroes: heroes,
+      isPaginatorAvailable: true,
+      totalHeroes: 0,
+    });
+    fixture.detectChanges();
+
+    const tableRows = fixture.debugElement.queryAll(By.css('tr.mat-row'));
+    expect(tableRows.length).toBe(0);
+
+    const emptyMessage = fixture.debugElement.query(
+      By.css('.card.text-center')
+    );
+    expect(emptyMessage).toBeTruthy();
+    expect(emptyMessage.nativeElement.textContent).toContain(
+      'No se han encontrado resultados'
+    );
+  });
+
+  it('should call getSearchWord and filter heroes based on search input', () => {
+    spyOn(component, 'getSearchWord');
+    const inputElement = fixture.debugElement.query(
+      By.css('input[type="search"]')
+    ).nativeElement;
+    inputElement.value = 'Batman';
+    inputElement.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+
+    expect(component.getSearchWord).toHaveBeenCalled();
+  });
+
+  it('should call filterHeroes with the search term', () => {
+    spyOn(component, 'filterHeroes').and.callThrough();
+
+    component.filterHeroes('Batman');
+    expect(component.filterHeroes).toHaveBeenCalledWith('Batman');
+  });
+
+  it('should call getSearchWord and emit search term', () => {
+    spyOn(component.searchSubject, 'next');
+    const inputElement = fixture.debugElement.query(
+      By.css('input[type="search"]')
+    ).nativeElement;
+    inputElement.value = 'Batman';
+    inputElement.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+
+    expect(component.searchSubject.next).toHaveBeenCalledWith('batman');
+  });
+
+  it('should not emit if searchInput is undefined', () => {
+    component.searchInput = undefined;
+    spyOn(component.searchSubject, 'next');
+
+    component.getSearchWord();
+    expect(component.searchSubject.next).not.toHaveBeenCalled();
+  });
+
+  it('should call getPaginatedHeroes and set isPaginatorAvailable to true when searchTerm is empty', () => {
+    const heroes: [] = [];
+    mockHeroService.getPaginatedHeroes.and.returnValue(
+      of({
+        data: heroes,
+        first: 1,
+        prev: 1,
+        next: 1,
+        last: 1,
+        pages: 2,
+        items: 0,
+      })
+    );
+    spyOn(component, 'filterHeroes').and.callThrough();
+    spyOn(mockHeroService.isPaginatorAvailable, 'next');
+  
+    component.filterHeroes('');
+  
+    expect(mockHeroService.getPaginatedHeroes).toHaveBeenCalledWith(
+      1,
+      component.pageSize
+    );
+    expect(mockHeroService.isPaginatorAvailable.next).toHaveBeenCalledWith(
+      true  
+    );
+  });
+  
 });

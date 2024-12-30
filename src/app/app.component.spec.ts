@@ -39,13 +39,6 @@ describe('AppComponent', () => {
     expect(app.title).toBe('hero-managment');
   });
 
-  it('should have a router outlet', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const compiled = fixture.nativeElement as HTMLElement;
-    const routerOutlet = compiled.querySelector('router-outlet');
-    expect(routerOutlet).toBeTruthy();
-  });
-  
   it('should navigate to the specified route', async () => {
     const router = TestBed.inject(Router);
     const location = TestBed.inject(Location);

@@ -64,12 +64,16 @@ describe('DialogConfirmComponent', () => {
     expect(component.onNoClick).toHaveBeenCalled();
     expect(dialogRefSpy.close).toHaveBeenCalled();
   });
-  
+
   it('should close the dialog with hero data when Confirmar button is clicked', () => {
     const confirmButton = fixture.debugElement.query(
       By.css('button[mat-flat-button]')
     ).nativeElement;
     confirmButton.click();
     expect(dialogRefSpy.close).toHaveBeenCalledWith(mockHero);
+  });
+  it('should close the dialog when onNoClick is called', () => {
+    component.onNoClick();
+    expect(dialogRefSpy.close).toHaveBeenCalled();
   });
 });

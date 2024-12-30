@@ -38,6 +38,13 @@ describe('HeroComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should have a router outlet', () => {
+    const fixture = TestBed.createComponent(HeroComponent);
+    const compiled = fixture.nativeElement as HTMLElement;
+    const routerOutlet = compiled.querySelector('router-outlet');
+    expect(routerOutlet).toBeTruthy();
+  });
+
   it('should display the progress bar when loading$', (done) => {
     loadingSubject.next(true);
     fixture.detectChanges();
